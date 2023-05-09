@@ -1,17 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
+import ShipDisplay from './Ship/Ships'
 
-type AppProps = {
-    children: React.ReactNode
-}
-
-export default function App ({ children }: AppProps) {
+export default function App () {
   return (
     <>
       <head>
         <title>SpaceTraders</title>
       </head>
       <body>
-        {children}
+        {
+          <ShipDisplay />
+        }
       </body>
     </>
   )
