@@ -115,4 +115,20 @@ export default class Ship {
       systemSymbol: system
     }, { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.client.token}` } })
   }
+
+  /**
+   * Refuel ship from planet if fuel is available
+   * @todo
+   */
+  async Refuel () {
+    // TODO; Implement
+  }
+
+  /**
+   * Extract resources from the planet/asteroid
+   * @todo
+   */
+  async Extract () {
+    // TODO; Implement
+  }
 }
