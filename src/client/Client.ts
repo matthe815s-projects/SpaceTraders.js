@@ -41,6 +41,7 @@ export default class Client extends EventEmitter {
     console.log(response.data)
   }
 
+  // TODO; Move to independent manager class
   async GetContracts () {
     const response = (await axios.get('https://api.spacetraders.io/v2/my/contracts', { headers: { Authorization: `Bearer ${this.token}` } })).data
     console.log(response.data)
