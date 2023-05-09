@@ -1,22 +1,25 @@
+import path from 'path'
 import Client from '../client/Client'
-import Index from './routes'
+import Index from './pages/index'
 const express = require('express')
 
 export default class WebClient {
   private client: Client
-  public express: any
+  public app: any
 
   constructor (client: Client) {
     this.client = client
-    this.express = express()
+    this.app = express()
+    this.app.use(express.static(path.resolve(__dirname, 'public')))
   }
 
   start () {
-    this.express.listen(3000, () => console.log('Listening on port 3000'))
+    this.app.listen(3000, () => console.log('Listening on port 3000'))
+
     this.registerEndpoints()
   }
 
   registerEndpoints () {
-    this.express.get('/', Index(this.client))
+    this.app.get('/', Index(this.client))
   }
 }
