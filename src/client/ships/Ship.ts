@@ -97,6 +97,8 @@ export default class Ship {
    * @param waypoint The waypoint to navigate to
    */
   async Navigate (waypoint: string) {
+    if (this.nav.status !== ShipStatus.IN_ORBIT) return
+
     await axios.post(`https://api.spacetraders.io/v2/my/ships/${this.symbol}/navigate`, {
       waypointSymbol: waypoint
     }, { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.client.token}` } })
@@ -107,6 +109,8 @@ export default class Ship {
    * @param system The system to warp to
    */
   async Warp (system: string) {
+    if (this.nav.status !== ShipStatus.IN_ORBIT) return
+
     await axios.post(`https://api.spacetraders.io/v2/my/ships/${this.symbol}/warp`, {
       systemSymbol: system
     }, { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.client.token}` } })
