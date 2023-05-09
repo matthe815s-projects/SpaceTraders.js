@@ -131,4 +131,12 @@ export default class Ship {
   async Extract () {
     // TODO; Implement
   }
+
+  /**
+   * Order the ship to sell to the market
+   * @todo
+   */
+  async Sell (symbol: string, units: number) {
+    // TODO; Implement
+  }
 }
