@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>Ships</title>
+        <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+    </body>
+    <script type="text/babel">
+        const ships = <%- JSON.stringify(ships) %>
+
+        function Ship ({ ship }) {
+            function dock () {
+                fetch("test")
+            }
+
+            return <div>
+                <p>{ship.symbol}</p>
+                <p>{ship.fuel.current} / {ship.fuel.capacity}</p>
+                <button onClick={dock}>Dock</button>
+            </div>
+        }
+
+        function App () {
+            return <div>
+                <p>App</p>
+                {ships.map(ship => <Ship ship={ship} />)}
+            </div>
+        }
+        ReactDOM.render(<App />, document.getElementById('root'))
+    </script>
+</html>
