@@ -21,10 +21,5 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
-  },
-  "import/resolver": {
-    "webpack": {
-      "config": "webpack.config.js"
-    }
   }
 }
