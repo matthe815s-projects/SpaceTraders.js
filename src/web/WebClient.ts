@@ -11,6 +11,7 @@ export default class WebClient {
     this.client = client
     this.app = express()
     this.app.use(express.static(path.resolve(__dirname, 'public')))
+    this.app.use(express.static(path.resolve(__dirname, 'build')))
     this.app.set('view engine', 'ejs')
     this.app.set('views', path.join(__dirname, '/build'))
   }
