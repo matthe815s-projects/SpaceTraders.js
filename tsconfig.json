@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "jsx": "react",
+    "jsx": "react-jsx",
+    "sourceMap": true,
     "target": "es5",                          
     "module": "commonjs",                    
     "lib": ["es6", "DOM"],                     

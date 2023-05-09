@@ -1,7 +1,5 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const NodemonPlugin = require('nodemon-webpack-plugin')
-const { DefinePlugin } = require('webpack')
 
 module.exports = {
   entry: './src/web/components/index.jsx',
@@ -13,12 +11,12 @@ module.exports = {
     rules: [
       // `js` and `jsx` files are parsed using `babel`
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react']
+            presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript']
           }
         }
       },

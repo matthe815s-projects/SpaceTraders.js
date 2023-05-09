@@ -1,6 +1,6 @@
 import path from 'path'
 import Client from '../client/Client'
-import Index from './pages/index'
+import Ship from '../client/ships/Ship'
 const express = require('express')
 
 export default class WebClient {
@@ -22,6 +22,15 @@ export default class WebClient {
   }
 
   registerEndpoints () {
-    this.app.get('/', Index(this.client))
+    this.app.get('/api/ships', (req: any, res: any) => {
+      const ships: Ship[] = [];
+
+      this.client.ships.cache.forEach((ship: any) => {
+        let {client: _, ...shipData} = ship;
+        ships.push(shipData);
+      })
+
+      res.json(ships)
+    });
   }
 }
