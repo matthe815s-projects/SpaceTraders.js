@@ -12,24 +12,6 @@
     <script type="text/babel">
         const ships = <%- JSON.stringify(ships) %>
 
-        function Ship ({ ship }) {
-            function dock () {
-                fetch("test")
-            }
-
-            return <div>
-                <p>{ship.symbol}</p>
-                <p>{ship.fuel.current} / {ship.fuel.capacity}</p>
-                <button onClick={dock}>Dock</button>
-            </div>
-        }
-
-        function App () {
-            return <div>
-                <p>App</p>
-                {ships.map(ship => <Ship ship={ship} />)}
-            </div>
-        }
         ReactDOM.render(<App />, document.getElementById('root'))
     </script>
 </html>
