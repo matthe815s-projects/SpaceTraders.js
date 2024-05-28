@@ -2,7 +2,7 @@
 
 import Client from './client/Client'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
-import WebClient from './web/WebClient'
+import Contract from './client/contracts/Contract'
 
 if (!existsSync('config.json')) {
   console.log('No config.json found, creating one')
@@ -12,14 +12,16 @@ if (!existsSync('config.json')) {
 const config = JSON.parse(readFileSync('config.json', 'utf-8'))
 
 const client = new Client()
-const webClient = new WebClient(client)
 
 client.Login(config.token)
 
-client.on('ready', async () => {
+client.on('ready', (): void => {
   console.log('Client ready')
-  webClient.start()
 
   console.log(`Current ship count: ${client.ships.cache.size}`)
   console.log(`Current system count: ${client.systems.cache.size}`)
+})
+
+client.on('contractsLoad', (contracts: Contract[]) => {
+  console.log(`Current contract count: ${contracts.length}`)
 })
