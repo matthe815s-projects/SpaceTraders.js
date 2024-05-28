@@ -23,6 +23,7 @@ export default class SystemManager {
 
   async fetch () {
     let response: System[] = (await axios.get('https://api.spacetraders.io/v2/systems', { headers: { Authorization: `Bearer ${this.client.token}` } })).data.data
+    console.log(response.length)
 
     response.forEach(system => {
       this.cache.set(system.symbol, new System(this.client, system))

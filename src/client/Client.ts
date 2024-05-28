@@ -5,6 +5,7 @@ import EventEmitter from 'events'
 import ShipManager from './ships/ShipManager'
 import SystemManager from './systems/SystemManager'
 import Contract from './contracts/Contract'
+import System from './systems/System'
 
 export default class Client extends EventEmitter {
   public token: string = ''
@@ -32,11 +33,17 @@ export default class Client extends EventEmitter {
     this.token = token
 
     await this.ships.fetch()
-    await this.systems.fetch()
+    this.agent.homeSystem = await this.GetHomeSystem()
 
     this.emit('ready')
 
     await this.GetContracts()
+  }
+
+  async GetHomeSystem (): Promise<System> {
+    const system: string = `${this.agent.headquarters.split('-')[0]}-${this.agent.headquarters.split('-')[1]}`
+    const systemData = (await axios.get(`https://api.spacetraders.io/v2/systems/${system}`, { headers: { Authorization: `Bearer ${this.token}` } })).data.data
+    return new System(this, systemData)
   }
 
   async GetFactions () {
