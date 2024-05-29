@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {writeFileSync} from 'fs'
+import { writeFileSync } from 'fs'
 import AgentData from './types/AgentData'
 import EventEmitter from 'events'
 import ShipManager from './ships/ShipManager'
@@ -33,11 +33,14 @@ export default class Client extends EventEmitter {
     this.token = token
 
     await this.ships.fetch()
-    this.agent.homeSystem = await this.GetHomeSystem()
 
-    this.emit('ready')
+    this.agent.homeSystem = await this.GetHomeSystem()
+    this.systems.cache.set(this.agent.homeSystem.symbol, this.agent.homeSystem)
+    this.emit('systemCreate')
 
     await this.GetContracts()
+
+    this.emit('ready')
   }
 
   async GetHomeSystem (): Promise<System> {

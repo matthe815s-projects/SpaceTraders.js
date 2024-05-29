@@ -21,16 +21,19 @@ export default class SystemManager {
     return Array.from(this.cache.values())[0]
   }
 
-  async fetch () {
-    let response: System[] = (await axios.get('https://api.spacetraders.io/v2/systems', { headers: { Authorization: `Bearer ${this.client.token}` } })).data.data
+  async fetch (system: string): Promise<System> {
+    const response: System = (await axios.get(`https://api.spacetraders.io/v2/systems/${system}`, { headers: { Authorization: `Bearer ${this.client.token}` } })).data.data
+    const systemObj: System = new System(this.client, response)
+    this.cache.set(response.symbol, systemObj)
+    return systemObj
+  }
+
+  async fetchAll () {
+    const response: System[] = (await axios.get('https://api.spacetraders.io/v2/systems', { headers: { Authorization: `Bearer ${this.client.token}` } })).data.data
     console.log(response.length)
 
     response.forEach(system => {
       this.cache.set(system.symbol, new System(this.client, system))
     })
-
-    for (const system of Array.from(this.cache.values())) {
-      if (system.symbol === this.client.agent.headquarters) this.home = system
-    }
   }
 }

@@ -2,6 +2,20 @@ import Client from '../Client'
 import axios from 'axios'
 import { ShipStatus } from './ShipStatus'
 import { ShipFlightMode } from './ShipFlightMode'
+import System from '../systems/System'
+
+export enum WaypointType {
+  PLANET = 'PLANET'
+}
+
+type Route = {
+  system: System;
+  symbol: string
+  type: WaypointType
+  systemSymbol: string
+  x: number
+  y: number
+}
 
 export default class Ship {
   private client: Client
@@ -12,7 +26,12 @@ export default class Ship {
   nav: {
     systemSymbol: string;
     waypointSymbol: string;
-    route: object;
+    route: {
+      origin: Route;
+      destination: Route;
+      arrival: Date;
+      departureTime: Date;
+    };
     status: ShipStatus;
     flightMode: ShipFlightMode;
   }
@@ -58,12 +77,20 @@ export default class Ship {
     this.mounts = data.mounts
     this.registration = data.registration
     this.cargo = data.cargo
+
+    this.client.systems.fetch(this.nav.route.origin.systemSymbol).then((system: System) => {
+      this.nav.route.origin.system = system
+    })
+
+    this.client.systems.fetch(this.nav.route.destination.systemSymbol).then((system: System) => {
+      this.nav.route.destination.system = system
+    })
   }
 
   /**
    * Sends the ship into orbit, fails if the ship is not docked
    */
-  async Orbit () {
+  async orbit () {
     if (this.nav.status !== ShipStatus.DOCKED) return
 
     await axios.post(`https://api.spacetraders.io/v2/my/ships/${this.symbol}/orbit`, {}, { headers: { Authorization: `Bearer ${this.client.token}` } })
@@ -73,7 +100,7 @@ export default class Ship {
   /**
    * Docks the ship, fails if the ship is already docked
    */
-  async Dock () {
+  async dock () {
     if (this.nav.status === ShipStatus.DOCKED) return
 
     await axios.post(`https://api.spacetraders.io/v2/my/ships/${this.symbol}/dock`, {}, { headers: { Authorization: `Bearer ${this.client.token}` } })
@@ -84,7 +111,7 @@ export default class Ship {
    * Set the flight mode of the ship
    * @param mode The flight mode to set the ship to
    */
-  async SetFlightMode (mode: ShipFlightMode) {
+  async setFlightMode (mode: ShipFlightMode): Promise<void> {
     await axios.patch(`https://api.spacetraders.io/v2/my/ships/${this.symbol}/nav`, {
       flightMode: mode
     }, { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.client.token}` } })
@@ -96,7 +123,7 @@ export default class Ship {
    * Navigate to a waypoint within the system
    * @param waypoint The waypoint to navigate to
    */
-  async Navigate (waypoint: string) {
+  async navigate (waypoint: string): Promise<void> {
     if (this.nav.status !== ShipStatus.IN_ORBIT) return
 
     await axios.post(`https://api.spacetraders.io/v2/my/ships/${this.symbol}/navigate`, {
@@ -108,7 +135,7 @@ export default class Ship {
    * Warp to a system if a warp drive is installed
    * @param system The system to warp to
    */
-  async Warp (system: string) {
+  async warp (system: string) {
     if (this.nav.status !== ShipStatus.IN_ORBIT) return
 
     await axios.post(`https://api.spacetraders.io/v2/my/ships/${this.symbol}/warp`, {
@@ -120,8 +147,10 @@ export default class Ship {
    * Refuel ship from planet if fuel is available
    * @todo
    */
-  async Refuel () {
-    // TODO; Implement
+  async refuel (): Promise<void> {
+    if (this.nav.status !== ShipStatus.IN_ORBIT) return
+
+    await axios.post(`https://api.spacetraders.io/v2/my/ships/${this.symbol}/refuel`, { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.client.token}` } })
   }
 
   /**
@@ -129,7 +158,9 @@ export default class Ship {
    * @todo
    */
   async Extract () {
-    // TODO; Implement
+    if (this.nav.status !== ShipStatus.IN_ORBIT) return
+
+    await axios.post(`https://api.spacetraders.io/v2/my/ships/${this.symbol}/extract`, { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${this.client.token}` } })
   }
 
   /**
